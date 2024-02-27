@@ -1,21 +1,37 @@
 const loginForm = document.getElementById("login-form");
 const loginInput = loginForm.querySelector("input");
+const greeting = document.getElementById("greeting");
 
-const link = document.querySelector("a");
+const HIDDEN_CLASSNAME = "hidden";
+const USERNAME_KEY = "username";
 
 //first argument: information about the event that just happened
 function onSubmit(event)
 {
 	event.preventDefault(); //stop default event
-	console.log(event);
+	loginForm.classList.add("hidden");
+	const username = loginInput.value;
+	localStorage.setItem(USERNAME_KEY, username);
+	paintGreetings();
 }
 
-function handleLinkClick(event)
-{
-	event.preventDefault();
-	console.log(event);
-	// alert("clicked"); //막았다가 ok 누르면 실행됨
+function paintGreetings(){
+	const username = localStorage.getItem(USERNAME_KEY);
+	greeting.innerText = `Hello ${username}`;
+	greeting.classList.remove(HIDDEN_CLASSNAME);
 }
-//onclick or pressEnter
-loginForm.addEventListener("submit", onSubmit);
-link.addEventListener("click", handleLinkClick);
+
+const savedUsername = localStorage.getItem(USERNAME_KEY);
+
+if (savedUsername == null)
+{
+	//show the form
+	loginForm.classList.remove(HIDDEN_CLASSNAME);
+	//onclick or pressEnter
+	loginForm.addEventListener("submit", onSubmit);
+}
+else
+{
+	//show the greetings
+	paintGreetings();
+}
